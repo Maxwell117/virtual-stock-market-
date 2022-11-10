@@ -1,0 +1,167 @@
+import mysql.connector
+class Stocks:
+   
+
+    def __init__(self):
+    trader_mode=False;
+        mydb = mysql.connector.connect
+        (
+        host="localhost",
+        user="yourusername",
+        password="yourpassword"
+        )
+        mode=input("would you like to enter trader mode or viewer mode? [T/V])
+        if mode is 'V':
+            print("successfully entered viewer mode")
+	  self.view_stocks()
+        elif mode is 'T':
+            answer=input("Do you have an account? [Y/N]")
+            if answer is 'Y':
+                if(Log_in()): #returns true if log in was successful
+                    trader_mode=True
+                    print("successfully entered user mode")
+		self.menu()
+            else if answer is 'N':
+                if(Sign_up()): #returns true if sign up was successful
+                    trader_mode=True
+                    print("successfully entered user mode")
+      		self.menu()
+
+            
+        
+       def Log_in(self):
+            user_name=input("please enter your username")
+            pass_word=input("please enter your password")
+            mycursor = mydb.cursor()
+            bool(x)= SELECT username,password from traders WHERE 
+username = '{{user_name}}'"  AND password= '{{pass_word}}'"
+            if x is True:
+                return True
+            else if x is False:
+                print("invalid username or password")
+                return False
+            
+            
+        def Sign_up(self):
+            mycursor = mydb.cursor()
+            sql = "INSERT INTO traders (username,password) VALUES (%s, %s)"
+            print("please enter a username and password")
+            val=input().split(seperator,maxsplit)
+            mycursor.execute(sql, val)
+            Sql = “INSERT INTO traders (balance) VALUES(0) #everyone has $0 by default
+            mycursor.execute(sql, val)
+            mydb.commit()
+            return True
+            
+   
+        
+    
+    def buy_stock(self,stock_price,stock_name, qty):
+        
+        if trader_mode is False
+            print("you can't buy stocks in viewer mode")
+        else if(balance < stock_price*qty):
+            print("insufficient funds")
+        else:
+            new_balance=balance-stock_price*qty
+            mycursor = mydb.cursor()
+            sql = f"UPDATE traders SET balance = '{{new_balance}}' WHERE username = '{{user_name}}'" 
+            mycursor.execute(sql)
+            sql = f"INSERT INTO stock_holdings (username,held_Stocks, amount) VALUES ({{user_name}},{{stock_name}},{{stock_price*qty}})"
+            mycursor.execute(sql)
+            db.commit()
+            print("stock successfully bought")
+	   #self.menu()
+        
+    def sell_stock(self,stock_price,stock_name, qty):#should select balance & stock price from table first
+        
+        if trader_mode is False:
+            print("you cant sell stocks in viewer mode")
+        else:
+            new_balance=balance+stock_price
+            mycursor = mydb.cursor()
+            sql = f"UPDATE traders SET balance = '{{new_balance}}' WHERE username = '{{user_name}}'"    
+            mycursor.execute(sql)
+            sql = f"INSERT INTO stock_holdings (username,held_Stocks, amount) VALUES ({{user_name}},{{stock_name}},{{stock_price*qty*-1}})"
+            mycursor.execute(sql)
+            db.commit()
+            print("stock successfully sold")
+ 	  #self.menu()
+    
+        
+    def withdrawl_money(self):  #should select balance from table first
+       if trader_mode is False:
+            print("you can't withdrawl in viewer mode")
+       else:
+            fake_credit_card=input("enter your fake credit card")
+            money=int(input("enter the amount of money you would like to withdrawl"))
+            new_balance=balance+money
+            mycursor = mydb.cursor()
+            sql = "UPDATE traders SET balance = '{{new_balance}}' 
+            mycursor.execute(sql)
+            db.commit()
+            print("successfully withdrew",money,” dollars")
+	   #self.menu()
+
+  def delete_account(self):  
+         c = input(“are you sure you want to delete your account? [y/n]”)
+        If c is ‘n’ or trader_mode is False:
+         	      return
+        elif c is ‘y’:
+	       mycursor = mydb.cursor()
+	       sql = "DELETE FROM traders WHERE username = '{{user_name}}'" 	       mycursor.execute(sql)
+       mydb.commit()
+        print(“your account was successfully deleted”)
+
+Def menu(self) :
+               print ("""" 
+    please select 1-6 for respected events
+    1.  Sell a stock
+    2.  Buy a stock
+    3.  Stock quoata
+    4.  Withdrawl money
+    5.  Delete account 
+    6.  Exit program
+    """")
+     number= int(input()) 
+     While true: 
+     If number == 1:
+             self.sell_stock()
+     elif number == 2:
+             self.buy_stock()
+      elif number ==3:
+             self.view_stocks()
+      elif number==4:
+             self.withdrawl_money()
+       elif number==5:
+             self.delete_account() 
+      elif number==6:
+              Sys.exit() #leave program
+       else: 
+              Print(“you entered a wrong number try  a number 1-6”)
+               number= int(input()) 
+
+
+//////////////////Code below should run 24/7///////////////////
+import yfinance as yf
+
+comp = input('Enter the company:')
+
+tick = yf.Ticker(comp)
+hist = tick.history(period='one')
+
+if(len(hist) != 0):
+    info = tick.info
+    for key in hist.to_dict()['Open'].keys():
+        open = hist.to_dict()['Open'][key]
+        close = hist.to_dict()['Close'][key]
+        last_date = str(key)
+
+    comp_name = info['longName']
+    curr = info['currency']
+    sym = info['symbol']
+    vol = info['volume']
+    avg_vol = info['averageVolume']
+    print(last_date, comp_name,curr,sym, vol, avg_vol, open, close)
+else:
+    print('Data not found')
